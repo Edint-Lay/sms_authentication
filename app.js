@@ -1,16 +1,26 @@
+// const { urlencoded } = require('body-parser');
 const express = require('express');
+const { send_message } = require('./sms');
+const axios = require('axios');
 
 const app = express();
 
 require("dotenv").config();
 
+app.use(express.json())
+
 app.post('/sms', async( req, res) => {
+    try {
+    console.log(req.body)
     const { phoneNumber } = req.body;
 
-    const date = Date.now().toString();
-    const uri = process.env.SERVICE_ID; //서비스 ID
-    const secretKey = process.env.NCP_SECRET_KEY;// Secret Key
-    const accessKey = process.env.NCP_ACCESS_KEY;//Access Key
+    const send = await send_message("ㅁㄴㅇㄴㅁㅇ", "하이", phoneNumber)
+
+    return res.send(send)
+    } catch (err) {
+        console.log(err)
+        return err;
+    }
 })
 
 app.listen(3000, () => {
